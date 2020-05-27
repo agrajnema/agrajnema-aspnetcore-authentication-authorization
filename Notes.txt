@@ -1,0 +1,10 @@
+1.	Create a new Asp.net core MVC application with Authentication changed from None to Individual user accounts
+2.	To make use of Asp.net core Identity Make sure Microsoft.AspNetCore.Identity.UI package is installed
+3.	Run the project and it will ask you to Apply migration, you can check if the migrations are applied by connecting to the local DB mentioned in the appsettings.json file
+4.	Scaffold Identity item and add Login,Logout,Register views and select the DB context
+5.	To add custom columns to the default Identity tables and columns created, eg. FullName, add a class ApplicationUser and inherit it from IdentityUser
+6.	In Startup.cs, configure services method, change AddDefaultIdentity to AddIdentity and provide the class ApplicationUser
+7.	Make sure the DBContext use the ApplicationUser class before applying the new migrations
+8.	Update the views where IdentityUser was used and change it to ApplicationUser class
+9.	To define different configuration for our entities, we can use EF Core Fluent API
+
