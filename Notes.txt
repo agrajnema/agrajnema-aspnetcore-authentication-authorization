@@ -7,4 +7,6 @@
 7.	Make sure the DBContext use the ApplicationUser class before applying the new migrations
 8.	Update the views where IdentityUser was used and change it to ApplicationUser class
 9.	To define different configuration for our entities, we can use EF Core Fluent API
-
+10. To configure external provider for authentication, eg: Github install package - aspnetcore.security.oauth.github
+11. On your Github account, inside Developer Settings, add OAuth application and provide callback url, copy the client ID and secret generated
+12. 

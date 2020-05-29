@@ -12,6 +12,7 @@ using AuthenticationAuthorization.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AuthenticationAuthorization
 {
@@ -45,7 +46,15 @@ namespace AuthenticationAuthorization
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             });
 
-     
+            //Adding external provider for Authentication
+            //services.AddAuthentication().AddGitHub(options =>
+            //{
+            //    options.ClientId = Configuration.GetValue<string>("GithubClientId");
+            //    options.ClientSecret = Configuration.GetValue<string>("GithubClientSecret");
+            //});
+            
+                            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

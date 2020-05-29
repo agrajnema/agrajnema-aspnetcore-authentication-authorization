@@ -18,7 +18,7 @@ namespace AuthenticationAuthorization.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<IdentityUser>(i =>
+            builder.Entity<ApplicationUser>(i =>
             {
                 i.HasKey(k => k.Id);  //Define primary key
                 i.Property(p => p.UserName).HasMaxLength(50); //Define column configuration
