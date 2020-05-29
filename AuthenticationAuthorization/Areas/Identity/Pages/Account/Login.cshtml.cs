@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using AuthenticationAuthorization.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace AuthenticationAuthorization.Areas.Identity.Pages.Account
 {
@@ -79,6 +81,30 @@ namespace AuthenticationAuthorization.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                //Check for a specific email and password for Test purpose only
+                if(Input.Email == "test@test.com" && Input.Password == "Test@password123")
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, Input.Email),
+                        new Claim(ClaimTypes.Email, Input.Email),
+                        new Claim(ClaimTypes.Role, "admin")
+                    };
+                    var claimsIdentity = new ClaimsIdentity(claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authenticationProperties = new AuthenticationProperties
+                    {
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20),
+                        IssuedUtc = DateTimeOffset.UtcNow
+                    };
+
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity), authenticationProperties);
+
+                    return LocalRedirect(returnUrl);
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);

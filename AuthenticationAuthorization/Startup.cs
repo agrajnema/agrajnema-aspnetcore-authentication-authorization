@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace AuthenticationAuthorization
 {
@@ -30,12 +31,21 @@ namespace AuthenticationAuthorization
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"))
-                .UseLazyLoadingProxies());
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                    Configuration.GetConnectionString("DefaultConnection")));
+                //.UseLazyLoadingProxies());
+
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            //Adding external provider for Authentication
+            //services.AddAuthentication().AddGitHub(options =>
+            //{
+            //    options.ClientId = Configuration.GetValue<string>("GithubClientId");
+            //    options.ClientSecret = Configuration.GetValue<string>("GithubClientSecret");
+            //});
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -46,14 +56,17 @@ namespace AuthenticationAuthorization
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             });
 
-            //Adding external provider for Authentication
-            //services.AddAuthentication().AddGitHub(options =>
-            //{
-            //    options.ClientId = Configuration.GetValue<string>("GithubClientId");
-            //    options.ClientSecret = Configuration.GetValue<string>("GithubClientSecret");
-            //});
-            
-                            
+
+            //Adding cookie based authentication
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.LogoutPath = "/Account/Logout";
+                    options.Cookie.Name = "auth_cookie";
+                    options.Cookie.HttpOnly = false; //Not accessible by client side scripts and accessible only to servers
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                });
 
         }
 
@@ -77,6 +90,10 @@ namespace AuthenticationAuthorization
             app.UseRouting();
 
             app.UseAuthentication();
+
+            var cookiePolicyOptions = new CookiePolicyOptions();
+            cookiePolicyOptions.MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+            app.UseCookiePolicy(cookiePolicyOptions);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

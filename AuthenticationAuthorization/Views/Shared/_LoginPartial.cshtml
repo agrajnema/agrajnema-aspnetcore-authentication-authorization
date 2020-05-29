@@ -1,11 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using AuthenticationAuthorization.Data
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@*@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager*@
+@inject  Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+@if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)//SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>

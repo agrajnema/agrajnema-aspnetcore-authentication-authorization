@@ -9,4 +9,8 @@
 9.	To define different configuration for our entities, we can use EF Core Fluent API
 10. To configure external provider for authentication, eg: Github install package - aspnetcore.security.oauth.github
 11. On your Github account, inside Developer Settings, add OAuth application and provide callback url, copy the client ID and secret generated
-12. 
+12. For working with cookies, install package Microsoft.aspnetcore.authentication.cookies
+13. In Startup.cs ConfigureServices method, add support for cookies and set cookie options
+14. Configure the cookie policy middleware in Configure method and set cookie policy options
+15. For Creating an Authentication cookie, we need to create ClaimsPricipal object and define claims and claims identity
+16. Define authentication properties and pass claims Principal to SignIn method of HttpContext
