@@ -99,9 +99,15 @@ namespace AuthenticationAuthorization.Areas.Identity.Pages.Account
                         IssuedUtc = DateTimeOffset.UtcNow
                     };
 
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(claimsIdentity), authenticationProperties);
+                    var applicationUser = new ApplicationUser
+                    {
+                        Email = Input.Email,
+                        PasswordHash = Input.Password
+                    };
 
+                    //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    //    new ClaimsPrincipal(claimsIdentity), authenticationProperties);
+                    await _signInManager.SignInWithClaimsAsync(applicationUser, authenticationProperties, claims);
                     return LocalRedirect(returnUrl);
                 }
 
